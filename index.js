@@ -12,6 +12,9 @@ const app=express();
 //configurar cors
 app.use(cors());
 
+//lectura y parseo del body
+app.use(express.json());
+
 //base de datos
 dbConnection();
 
@@ -23,15 +26,11 @@ dbConnection();
 
 
 //RUTAS
-app.get('/', (req,res) => {
 
-    res.status(400).json({ //con status le paso el resultado de la petición
-        ok: true,
-        msg: 'Hola mundo'
-    })
+app.use('/api/usuarios', require('./routes/usuarios')); //creo ruta
+app.use('/api/login', require('./routes/auth'));
 
 
-});
 
 
 
