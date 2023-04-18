@@ -12,6 +12,9 @@ const app=express();
 //configurar cors
 app.use(cors());
 
+//CARPETA PUBLICA HTML
+app.use(express.static('public'));
+
 //lectura y parseo del body
 app.use(express.json());
 
