@@ -8,14 +8,29 @@ const Usuario = require('../models/usuario');
 
 const getUsuarios= async (req,res) => {
 
+    const desde= Number( req.query.desde) || 0; //agrega parametro desde para paginar
 
-    const usuarios= await Usuario.find({},'nombre email role google');
+    // const usuarios= await Usuario
+    //                         .find({},'nombre email role google')
+    //                         .skip(desde)
+    //                         .limit(5);
+
+    // const total = await Usuario.count()
 
 
+    const [usuarios, total] = await Promise.all([  //hace lo mismo que arriba pero ejecuta todo junto, es mas rapido
+        Usuario
+               .find({},'nombre email role google img')
+               .skip(desde)
+               .limit(5),
+
+        Usuario.countDocuments()
+    ])
 
     res.json({ //con status le paso el resultado de la petición
         ok: true,  
-        usuarios
+        usuarios,
+        total
         
 
     });
