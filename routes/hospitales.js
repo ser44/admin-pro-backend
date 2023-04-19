@@ -41,13 +41,16 @@ router.post(
 
 router.put('/:id',
     [
-
+        validarJWT,
+        check('nombre','El nombre del hospital es necesario').not().isEmpty(),
+        validarCampos
     ],
     actualizarHospital
-); //mando el usuario a modificar
+); 
 
 
 router.delete('/:id',
+    validarJWT,
     borrarHospital
 )
 

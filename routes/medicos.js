@@ -43,12 +43,17 @@ router.post(
 
 router.put('/:id',
     [
+    validarJWT,
+    check('nombre','El id del hospital es necesario').not().isEmpty(),
+    check('nombre','El nombre del medico es necesario').not().isEmpty(),
+    validarCampos
     ],
     actualizarMedico
 ); //mando el usuario a modificar
 
 
 router.delete('/:id',
+    validarJWT,
     borrarMedico
 )
 

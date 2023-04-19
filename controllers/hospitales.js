@@ -14,15 +14,13 @@ const getHospitales= async (req,res=response) =>{
 }
 
 const crearHospital= async (req,res = response) =>{
-
     
     const uid = req.uid;
     const hospital=new Hospital ({
         usuario: uid,
         ...req.body
     });
-    
-
+   
 
     try{
         const hospitalDB = await hospital.save();
@@ -38,25 +36,81 @@ const crearHospital= async (req,res = response) =>{
             msg: 'Hable con el administrador'
         })
     }
-
-
-
 }
 
-const actualizarHospital=(req,res) =>{
+const actualizarHospital=async(req,res) =>{
+    
+    const id= req.params.id; //guardo el id que viene en la request url
+    const uid=req.uid;
 
-    res.json({
-        ok: true,
-        msg: 'crearHospitales'
-    })
+    try {
+
+        const hospital = await Hospital.findById(id);
+
+        if(!hospital){
+            return res.status(400).json({
+                ok: false,
+                msg: 'Hospital no encontrado por id',
+            
+            })
+        }
+
+        //hospital.nombre = req.body.nombre; //guardo el nombre que viene en la request
+
+        const cambiosHospital={
+            ...req.body,
+            usuario: uid
+        }
+
+        const hospitalActualizado = await Hospital.findByIdAndUpdate(id,cambiosHospital,{new:true})
+
+        res.json({
+            ok: true,
+            hospital: hospitalActualizado
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok:false,
+            msg: 'Hable con el administrador'
+        })
+    }
 }
 
-const borrarHospital=(req,res) =>{
+const borrarHospital=async(req,res) =>{
+ 
+    const id= req.params.id; //guardo el id que viene en la request url
 
-    res.json({
-        ok: true,
-        msg: 'crearHospitales'
-    })
+    try {
+
+        const hospital = await Hospital.findById(id);
+
+        if(!hospital){
+            return res.status(400).json({
+                ok: false,
+                msg: 'Hospital no encontrado por id',
+            
+            })
+        }
+
+        //hospital.nombre = req.body.nombre; //guardo el nombre que viene en la request
+
+        await Hospital.findByIdAndDelete(id)
+        
+        res.json({
+            ok: true,
+            msg: 'hospital Eliminado'
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok:false,
+            msg: 'Hable con el administrador'
+        })
+    }
+    
 }
 
 module.exports={
